@@ -7,46 +7,46 @@ import redisClient from '../utils/redis';
 const userQueue = new Queue('userQueue', 'redis://127.0.0.1:6379');
 
 class UsersController {
-  static postNew(request, response) {
-    const { email } = request.body;
-    const { password } = request.body;
+  static createUser(request, response) {
+    const { emailAddress } = request.body;
+    const { userPassword } = request.body;
 
-    if (!email) {
+    if (!emailAddress) {
       response.status(400).json({ error: 'Missing email' });
       return;
     }
-    if (!password) {
+    if (!userPassword) {
       response.status(400).json({ error: 'Missing password' });
       return;
     }
 
-    const users = dbClient.db.collection('users');
-    users.findOne({ email }, (err, user) => {
-      if (user) {
+    const userCollection = dbClient.db.collection('users');
+    userCollection.findOne({ email: emailAddress }, (err, existingUser) => {
+      if (existingUser) {
         response.status(400).json({ error: 'Already exist' });
       } else {
-        const hashedPassword = sha1(password);
-        users.insertOne(
+        const hashedPassword = sha1(userPassword);
+        userCollection.insertOne(
           {
-            email,
+            email: emailAddress,
             password: hashedPassword,
           },
-        ).then((result) => {
-          response.status(201).json({ id: result.insertedId, email });
-          userQueue.add({ userId: result.insertedId });
+        ).then((insertResult) => {
+          response.status(201).json({ id: insertResult.insertedId, email: emailAddress });
+          userQueue.add({ userId: insertResult.insertedId });
         }).catch((error) => console.log(error));
       }
     });
   }
 
-  static async getMe(request, response) {
-    const token = request.header('X-Token');
-    const key = `auth_${token}`;
-    const userId = await redisClient.get(key);
+  static async getCurrentUser(request, response) {
+    const authToken = request.header('X-Token');
+    const cacheKey = `auth_${authToken}`;
+    const userId = await redisClient.get(cacheKey);
     if (userId) {
-      const users = dbClient.db.collection('users');
+      const userCollection = dbClient.db.collection('users');
       const idObject = new ObjectID(userId);
-      users.findOne({ _id: idObject }, (err, user) => {
+      userCollection.findOne({ _id: idObject }, (err, user) => {
         if (user) {
           response.status(200).json({ id: userId, email: user.email });
         } else {
@@ -54,7 +54,7 @@ class UsersController {
         }
       });
     } else {
-      console.log('Hupatikani!');
+      console.log('User not found!');
       response.status(401).json({ error: 'Unauthorized' });
     }
   }
