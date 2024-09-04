@@ -1,46 +1,51 @@
-# Files Manager
+# Files Manager API
 
-A simple file management API built with Express, MongoDB, Redis, Bull, and Node.js.
+Welcome to the Files Manager API, a powerful tool designed for efficient file management. This API leverages modern technologies such as Express, MongoDB, Redis, Bull, and Node.js to offer robust file handling capabilities.
 
-## Requirements
+## Getting Started
 
-### Applications
+To get started with the Files Manager API, follow these steps:
 
-+ Node.js
-+ Yarn (the package manager/resource negotiator)
+### Prerequisites
 
-### APIs
+1. **Node.js**: Ensure that Node.js is installed on your system.
+2. **Yarn**: Install Yarn for managing project dependencies.
 
-+ A Google API should be created with at least an email sending scope and a valid URL (e.g.; `http://localhost:5000/`) should be one of the redirect URIs. The `credentials.json` file should be stored in the root directory of this project.
+### Google API Setup
 
-### Environment Variables
+1. **Create a Google API Project**: This project should have permissions for sending emails.
+2. **Configure Redirect URI**: Use a valid redirect URI, such as `http://localhost:5000/`.
+3. **Place Credentials**: Save the `credentials.json` file in the root directory of your project.
 
-The required environment variables should be stored in a file named `.env` and each line should have the format `Name=Value`. The table below lists the environment variables that will be used by this server:
+### Configuration
 
-| Name | Required | Description |
-|:-|:-|:-|
-| GOOGLE_MAIL_SENDER | Yes | The email address of the account responsible for sending emails to users. |
-| PORT | No (Default: `5000`)| The port the server should listen at. |
-| DB_HOST | No (Default: `localhost`)| The database host. |
-| DB_PORT | No (Default: `27017`)| The database port. |
-| DB_DATABASE | No (Default: `files_manager`)| The database name. |
-| FOLDER_PATH | No (Default: `/tmp/files_manager` (Linux, Mac OS X) & `%TEMP%/files_manager` (Windows)) | The local folder where files are saved. |
+1. **Environment Variables**: Create a `.env` file in the root directory with the following variables:
+
+    ```plaintext
+    GOOGLE_MAIL_SENDER=your-email@example.com
+    PORT=5000
+    DB_HOST=localhost
+    DB_PORT=27017
+    DB_DATABASE=files_manager
+    FOLDER_PATH=/tmp/files_manager
+    ```
+
+    Adjust these values according to your setup. The `FOLDER_PATH` differs for different operating systems:
+    - **Linux/Mac OS X**: `/tmp/files_manager`
+    - **Windows**: `%TEMP%/files_manager`
 
 ## Installation
 
-+ Clone this repository and switch to the cloned repository's directory.
-+ Install the packages using `yarn install` or `npm install`.
+1. **Clone the Repository**: Clone the project repository to your local machine.
+2. **Install Dependencies**: Navigate to the project directory and run `yarn install` or `npm install`.
 
-## Usage
+## Running the Application
 
-Start the Redis and MongoDB services on your system and run `yarn start-server` or `npm run start-server`.
+1. **Start Services**: Ensure Redis and MongoDB services are running on your machine.
+2. **Start the Server**: Execute `yarn start-server` or `npm run start-server` to launch the API.
 
-## Tests
+## Testing
 
-+ Create a separate `.env` file for the tests named `.env.test` and store the value of the environment variables for the testing event in it.
-+ Run `yarn test` or `npm run test` to execute the E2E tests.
+1. **Prepare Environment**: Create a `.env.test` file with test-specific environment variables.
+2. **Run Tests**: Execute `yarn test` or `npm run test` to perform end-to-end testing.
 
-## Authors
-
-+ SUARA AYOMIDE
-+ ERIC ALARIBE
